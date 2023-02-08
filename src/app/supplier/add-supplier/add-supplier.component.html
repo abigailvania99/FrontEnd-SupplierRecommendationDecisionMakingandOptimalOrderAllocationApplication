@@ -1,0 +1,66 @@
+<div class="addSupplierForm">
+  <p>
+    <mat-toolbar style="background: none !important;">
+      <span style="margin: auto;">Add Supplier</span>
+    </mat-toolbar>
+  </p>
+  <mat-card>
+    <div class="theForm">
+      <form name="form" [formGroup]="forms" (ngSubmit)="validasi()">
+        <mat-form-field>
+          <mat-label>Supplier Name</mat-label>
+          <input matInput formControlName="suppliername" />
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.suppliername?.errors?.required
+            "
+          >
+            Supplier name is required
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" />
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.phone?.errors?.required
+            "
+          >
+            Phone is required
+          </mat-error>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.phone?.errors?.pattern
+            "
+          >
+            Phone must be number
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <mat-label>Address</mat-label>
+          <textarea matInput formControlName="address" cdkTextareaAutosize
+          cdkAutosizeMinRows="5"></textarea>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.address?.errors?.required
+            "
+          >
+            Address is required
+          </mat-error>
+        </mat-form-field>
+
+
+        <br /><br />
+        <button mat-raised-button color="primary" *ngIf = "!process">Save</button>
+        <button mat-raised-button color="primary" *ngIf="process"><mat-icon><mat-spinner color="accent" diameter="20">
+        </mat-spinner></mat-icon></button>
+      </form>
+    </div>
+  </mat-card>
+</div>

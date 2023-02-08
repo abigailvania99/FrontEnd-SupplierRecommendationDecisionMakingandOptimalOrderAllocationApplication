@@ -1,0 +1,19 @@
+.solution{
+  text-align: center;
+}
+.registrationForm{
+  text-align: center;
+  margin: 50px;
+  padding: 0px 0px 50px 0px;
+}
+.theForm{
+  text-align: left;
+  margin-left: 45%;
+}
+button{
+  margin:10px;
+}
+.errorMessage
+{
+  color: red;
+}

@@ -1,0 +1,257 @@
+<div class="optimizationForm">
+  <p>
+    <mat-toolbar style="background: none !important">
+      <span style="margin: auto">Order Optimization</span>
+    </mat-toolbar>
+  </p>
+  <mat-card>
+    <div class="theForm">
+      <form name="form" [formGroup]="forms" (ngSubmit)="validasi()">
+        The quantity of items of type 1 needed is between
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="0"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['0']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['0']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+          <mat-error *ngIf="submitted && validation1">
+            Value must be less then {{f['1'].value}}
+          </mat-error>
+        </mat-form-field>
+        and
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="1"
+            required
+            type="number"
+            placeholder="Ex. 500"
+            min="0"
+          />
+          <mat-error *ngIf="submitted && f['1']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['1']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+          <mat-error *ngIf="submitted && validation1">
+            Value must be greater then {{f['0'].value}}
+          </mat-error>
+        </mat-form-field>
+        <br />
+        The quantity of items of type 2 needed is between
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="2"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['2']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['2']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+          <mat-error *ngIf="submitted && validation2">
+            Value must be less then {{f['3'].value}}
+          </mat-error>
+        </mat-form-field>
+        and
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="3"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['3']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['3']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+          <mat-error *ngIf="submitted && validation2">
+            Value must be greater then {{f['2'].value}}
+          </mat-error>
+        </mat-form-field>
+        <br />
+        Minimum order items of type 1 to supplier 1 (quantity)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="4"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['4']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['4']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+        <br />
+        Minimum order items of type 1 to supplier 2 (quantity)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="5"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['5']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['5']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+        <br />
+        Minimum order items of type 2 to supplier 1 (quantity)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="6"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['6']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['6']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+        <br />
+        Minimum order items of type 2 to supplier 2 (quantity)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="7"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['7']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['7']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+
+        <br />
+        Price of items type 1 to supplier 1 (per unit)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="8"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['8']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['8']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+        <br />
+        Price of items type 1 to supplier 2 (per unit)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="9"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['9']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['9']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+
+        <br />
+        Price of items type 2 to supplier 1 (per unit)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="10"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['10']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['10']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+
+        <br />
+        Price of items type 2 to supplier 2 (per unit)
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            formControlName="11"
+            required
+            type="number"
+            placeholder="Ex. 500"
+          />
+          <mat-error *ngIf="submitted && f['11']?.errors?.required">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="submitted && f['11']?.errors?.min">
+            Value must be more than 0
+          </mat-error>
+        </mat-form-field>
+
+        <br /><br />
+        <button mat-raised-button color="primary" *ngIf="!process">Calculate</button>
+        <button mat-raised-button color="primary" *ngIf="process"><mat-icon><mat-spinner color="accent" diameter="20">
+        </mat-spinner></mat-icon></button>
+      </form>
+    </div>
+  </mat-card>
+  <div id="results">
+    <div *ngIf="result">
+      <p>
+        <mat-toolbar style="background: none !important">
+          <span style="margin: auto">Optimal Order Allocation Results</span>
+        </mat-toolbar>
+      </p>
+      The cost to be incurred is <strong>{{resultMatrix[0][1] | currency:'IDR'}}</strong>
+      <br>
+      The items of type 1 that must be ordered to supplier 1 as much as <strong>{{barang1supp1}}</strong>
+      <br>
+      The items of type 1 that must be ordered to supplier 2 as much as <strong>{{barang1supp2}}</strong>
+      <br>
+      The items of type 2 that must be ordered to supplier 1 as much as <strong>{{barang2supp1}}</strong>
+      <br>
+      The items of type 2 that must be ordered to supplier 2 as much as <strong>{{barang2supp2}}</strong>
+
+    </div>
+  </div>
+  <div id="result">
+  </div>
+  <br><br><br><br><br>
+</div>

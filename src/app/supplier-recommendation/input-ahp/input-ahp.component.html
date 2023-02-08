@@ -1,0 +1,575 @@
+<p>
+  <mat-toolbar style="height: max-content; background: none !important">
+    <span style="text-align: left"> Input Score of Subcriteria </span>
+  </mat-toolbar>
+</p>
+
+<div style="margin: 20px">
+  <strong>Score Definition: <br /></strong>
+  1 : Both subcriteria are equally important <br />
+  3 : Subcriteria A is slightly more important than Subcriteria B <br />
+  5 : Subcriteria A is more important than Subcriteria B <br />
+  7 : Subcriteria A is more important than Subcriteria B <br />
+  9 : Subcriteria A is absolutely important compared to Subcriteria B <br />
+  2,4,6,8 : There is a doubt of judgment between the two assessments/score
+  <br />
+  <form #elementsForm="ngForm">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      style="width: 100%"
+    >
+      <ng-container matColumnDef="subcriteriaA">
+        <th mat-header-cell *matHeaderCellDef>Subcriteria A</th>
+        <td mat-cell *matCellDef="let element; let index = index">
+          {{ element.subcriteria1.subcriteria }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef>Score</th>
+        <td mat-cell *matCellDef="let element; let index = index">
+          <input
+            type="number"
+            name="score-{{ index }}"
+            [(ngModel)]="element.score"
+          />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="subcriteriaB">
+        <th mat-header-cell *matHeaderCellDef>Subcriteria B</th>
+        <td mat-cell *matCellDef="let element; let index = index">
+          {{ element.subcriteria2.subcriteria }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; let i = index; columns: displayedColumns"
+      ></tr>
+    </table>
+  </form>
+</div>
+<div class="errorMessage" *ngIf="validationTabel">
+  Score field must be required and must be more than 0
+</div>
+<div class="errorMessage" *ngIf="crValidation">
+  Please reinput score because the score is not consistent
+</div>
+<button
+  mat-raised-button
+  color="primary"
+  style="margin: 20px"
+  (click)="calculateAhp()"
+  *ngIf="!processAhp"
+>
+  Calculate AHP
+</button>
+<button
+  mat-raised-button
+  color="primary"
+  style="margin: 20px"
+  *ngIf="processAhp"
+>
+  <mat-icon><mat-spinner color="accent" diameter="20"> </mat-spinner></mat-icon>
+</button>
+<div id="scorePromethee"></div>
+<p *ngIf="!validationTabel && submitted && !crValidation && !processAhp">
+  <mat-toolbar style="height: max-content; background: none !important">
+    <span style="text-align: left"> Input Score of Supplier </span>
+  </mat-toolbar>
+</p>
+<div
+  style="margin: 20px"
+  *ngIf="!validationTabel && submitted && !crValidation && !processAhp"
+>
+  <mat-card>
+    <ng-template ngFor let-supplier [ngForOf]="supplierData" let-i="index">
+      <p>
+        <strong>
+          {{ supplier.name }}
+        </strong>
+      </p>
+
+      <table>
+        <ng-template
+          ngFor
+          let-subcriteriaItem
+          [ngForOf]="subcriteriaData"
+          let-idx="index"
+        >
+          <tr>
+            <td>
+              {{ subcriteriaItem.subcriteria }}
+            </td>
+            <td>
+              :
+              <input
+                type="number"
+                [(ngModel)]="
+                  prometheeTabelScore[subcriteriaData.length * i + idx]
+                "
+              />
+            </td>
+          </tr>
+        </ng-template>
+      </table>
+
+      <br />
+    </ng-template>
+  </mat-card>
+  <div class="errorMessage" *ngIf="validationTabelPromethee">
+    All field must be required and the value at least 0
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    style="margin-top: 20px; margin-bottom: 20px"
+    (click)="calculatePromethee()"
+    *ngIf="!processPromethee"
+  >
+    Calculate Promethee
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    style="margin-top: 20px; margin-bottom: 20px"
+    *ngIf="processPromethee"
+  >
+    <mat-icon
+      ><mat-spinner color="accent" diameter="20"> </mat-spinner
+    ></mat-icon>
+  </button>
+</div>
+
+<div id="resultAhpPromethee"></div>
+
+<p *ngIf="!validationTabelPromethee && submittedPromethee && !processPromethee">
+  <mat-toolbar style="height: max-content; background: none !important">
+    <span style="text-align: left"> Result </span>
+  </mat-toolbar>
+</p>
+<div
+  style="margin: 20px"
+  *ngIf="!validationTabelPromethee && submittedPromethee && !processPromethee"
+>
+  <strong>AHP</strong><br />
+  <strong>Pairwise Comparison Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="columnSubcriteria"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="ahpResp.perbandinganBerpasangan"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ ahpResp.perbandinganBerpasangan[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Normalization Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="columnSubcriteria"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="ahpResp.normalisasi"
+          let-i="index"
+        >
+          <td style="text-align: center">{{ ahpResp.normalisasi[idx][i] }}</td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Priority Weight</strong>
+  <table border="2">
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="columnSubcriteria"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+
+        <td style="text-align: center">{{ ahpResp.bobotPrioritas[idx] }}</td>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Pairwise Comparison Matrix times Priority Weight</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <th>Pairwise Comparison Matrix x Priority Weight</th>
+    </tr>
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="columnSubcriteria"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+
+        <td style="text-align: center">
+          {{ ahpResp.perbandinganBerpasanganDikaliBobot[idx][0] }}
+        </td>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Division Matrix with Priority Weight from Pairwise Comparison Matrix times Priority Weight</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <th>Quotient</th>
+    </tr>
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="columnSubcriteria"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+
+        <td style="text-align: center">
+          {{ ahpResp.pembagianDenganBobot[idx][0] }}
+        </td>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong style="color: blue">lambda X: {{ ahpResp.lambdaX }}</strong>
+  <br />
+  <strong style="color: blue">CI: {{ ahpResp.ci }}</strong>
+  <br />
+  <strong style="color: blue">CR: {{ ahpResp.cr }}</strong>
+
+  <br /><br />
+  <strong>Promethee</strong>
+  <br />
+  <strong>Alternative Value Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="rowNilaiAlternatif"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="prometheeResp.nilaiAlternatif[0]"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ prometheeResp.nilaiAlternatif[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Normalization Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="columnSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="prometheeResp.normalisasi[0]"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ prometheeResp.normalisasi[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Difference Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="rowSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="prometheeResp.selisih[0]"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ prometheeResp.selisih[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Preference Value Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="rowSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="prometheeResp.nilaiPreferensi[0]"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ prometheeResp.nilaiPreferensi[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Multicriteria Preference Index Value Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template
+        ngFor
+        let-element
+        [ngForOf]="columnSubcriteria"
+        let-idx="index"
+      >
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="rowSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="prometheeResp.nilaiIndeksPreferensiMultiKriteria[0]"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ prometheeResp.nilaiIndeksPreferensiMultiKriteria[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Preference Aggregate Matrix</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <ng-template ngFor let-element [ngForOf]="columnSupplier" let-idx="index">
+        <th>{{ element }}</th>
+      </ng-template>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="columnSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <ng-template
+          ngFor
+          let-element
+          [ngForOf]="prometheeResp.aggregatPreferensi[0]"
+          let-i="index"
+        >
+          <td style="text-align: center">
+            {{ prometheeResp.aggregatPreferensi[idx][i] }}
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Entering Flow, Leaving Flow, Net Flow</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <th>Leaving Flow</th>
+      <th>Entering Flow</th>
+      <th>Net Flow</th>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="columnSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <td style="text-align: center">
+          {{ prometheeResp.leavingFlow[idx] }}
+        </td>
+        <td style="text-align: center">{{ prometheeResp.enteringFlow[idx] }}</td>
+        <td style="text-align: center">{{ prometheeResp.netFlow[idx] }}</td>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Rank of Supplier</strong>
+  <table border="2">
+    <tr>
+      <th></th>
+      <th>Net Flow</th>
+      <th>Rank</th>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="columnSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <td style="text-align: center">{{ prometheeResp.netFlow[idx] }}</td>
+        <td style="text-align: center">{{ rankSupplier[idx] }}</td>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+</div>
+
+<div
+  style="text-align: center"
+  *ngIf="!validationTabelPromethee && submittedPromethee && !processPromethee"
+>
+  <p>
+    <mat-toolbar style="height: max-content; background: none !important">
+      <span style="margin: auto"> Conclusion </span>
+    </mat-toolbar>
+  </p>
+</div>
+<div
+  style="margin: 20px; text-align: center"
+  *ngIf="!validationTabelPromethee && submittedPromethee && !processPromethee"
+>
+  <strong>Priority Weight</strong>
+  <table border="2" style="margin-left: auto; margin-right: auto">
+    <ng-template
+      ngFor
+      let-element
+      [ngForOf]="columnSubcriteria"
+      let-idx="index"
+    >
+      <tr>
+        <th>{{ element }}</th>
+
+        <td style="text-align: center">{{ ahpResp.bobotPrioritas[idx] }}</td>
+      </tr>
+    </ng-template>
+  </table>
+  <br />
+  <br />
+  <strong>Rank of Supplier</strong>
+  <table border="2" style="margin-left: auto; margin-right: auto">
+    <tr>
+      <th></th>
+      <th>Net Flow</th>
+      <th>Rank</th>
+    </tr>
+    <ng-template ngFor let-element [ngForOf]="columnSupplier" let-idx="index">
+      <tr>
+        <th>{{ element }}</th>
+        <td style="text-align: center">{{ prometheeResp.netFlow[idx] }}</td>
+        <td style="text-align: center">{{ rankSupplier[idx] }}</td>
+      </tr>
+    </ng-template>
+  </table>
+</div>

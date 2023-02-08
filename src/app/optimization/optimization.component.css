@@ -1,0 +1,10 @@
+.optimizationForm{
+  text-align: center;
+  margin: 50px;
+  padding: 0px 0px 50px 0px;
+}
+
+#results{
+  line-height: 30px;
+  text-align: left;
+}

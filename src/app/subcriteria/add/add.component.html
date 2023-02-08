@@ -1,0 +1,84 @@
+<div class="addSubcriteriaForm">
+  <p>
+    <mat-toolbar style="background: none !important;">
+      <span style="margin: auto;">Add Subcriteria</span>
+    </mat-toolbar>
+  </p>
+  <mat-card>
+    <div class="theForm">
+      <form name="form" [formGroup]="forms" (ngSubmit)="validasi()">
+        <mat-form-field>
+          <mat-label>Criteria</mat-label>
+          <mat-select formControlName="criteria">
+            <mat-option value="Quality">Quality</mat-option>
+            <mat-option value="Cost">Cost</mat-option>
+            <mat-option value="Delivery">Delivery</mat-option>
+            <mat-option value="Flexibility">Flexibility</mat-option>
+            <mat-option value="Responsiveness">Responsiveness</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.criteria?.invalid &&
+              f.criteria?.errors?.required
+            "
+          >
+            Criteria is required
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <mat-label>Subcriteria</mat-label>
+          <input matInput formControlName="subcriteria" />
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.subcriteria?.errors?.required
+            "
+          >
+            Subcriteria is required
+          </mat-error>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.subcriteria?.errors?.pattern
+            "
+          >
+            Subcriteria must be alphabet
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="Cost">Cost</mat-option>
+            <mat-option value="Benefit">Benefit</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.type?.invalid &&
+              f.type?.errors?.required
+            "
+          >
+            Type is required
+          </mat-error>
+        </mat-form-field>
+
+
+        <br /><br />
+        <button mat-raised-button color="primary" *ngIf="!process">Save</button>
+        <button mat-raised-button color="primary" *ngIf="process"><mat-icon><mat-spinner color="accent" diameter="20">
+        </mat-spinner></mat-icon></button>
+      </form>
+    </div>
+  </mat-card>
+  <div style="text-align: left;">
+    <br>
+    <strong>
+      Note For Type Field:
+    </strong>
+    <br>
+    If the greater the value the more profitable, then choose benefit. Otherwise choose cost.
+  </div>
+</div>

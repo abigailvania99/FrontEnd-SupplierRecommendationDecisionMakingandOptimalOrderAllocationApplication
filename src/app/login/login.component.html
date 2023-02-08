@@ -1,0 +1,127 @@
+<div class="loginForm">
+  <p>
+    <mat-toolbar style="background: none !important;">
+      <span style="margin: auto;">Login</span>
+    </mat-toolbar>
+  </p>
+  <mat-card>
+    <div class="theForm">
+      <form name="form" [formGroup]="forms" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="emails" />
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.emails?.errors?.required
+            "
+          >
+            Email is required
+          </mat-error>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.emails?.errors?.email
+            "
+          >
+            Email must be a valid email Address
+          </mat-error>
+        </mat-form-field>
+        <br  *ngIf="question">
+        <label *ngIf="question">What is your mother's name ? </label>
+        <br *ngIf="question">
+        <mat-form-field *ngIf="question"
+        (keypress)="addValidatorAnswer($event)" (click)="cekKlikAnswer($event)">
+          <mat-label>Answer</mat-label>
+          <input matInput formControlName="answer"
+           />
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.answer?.errors?.required
+            "
+          >
+          Answer is required
+          </mat-error>
+          <mat-error
+            *ngIf="
+              (submitted &&
+              f.answer?.errors?.pattern)
+            "
+          >
+            Answer must be alphabet
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field *ngIf="!question" (keypress)="addValidatorPassword($event)" (click)="cekKlikPassword($event)">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hide ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hide = !hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+          <mat-hint align="end">Min 6 characters</mat-hint>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.password?.errors?.required
+            "
+          >
+            Password is required
+          </mat-error>
+          <mat-error
+            *ngIf="
+              submitted &&
+              f.password?.errors?.minlength
+            "
+          >
+            Password at least 6 characters
+          </mat-error>
+
+        </mat-form-field>
+        <div class="errorMessage" *ngIf="wrongInput && !question  && submitted"
+        >
+          Your Email or Password is wrong
+        </div>
+        <div class="errorMessage" *ngIf="wrongAnswer && question && submitted"
+        >
+          Your Email or Answer is wrong
+        </div>
+        <br />
+        <button mat-raised-button color="primary"
+        *ngIf="!process">Login</button>
+        <button mat-raised-button color="primary" *ngIf="process"><mat-icon><mat-spinner color="accent" diameter="20">
+        </mat-spinner></mat-icon></button>
+      </form>
+    </div>
+  </mat-card>
+</div>
+
+<div class="solution">
+  <div *ngIf="!question">
+    Forgot Password ?
+    <button mat-raised-button color="primary" (click)="goToLoginQuestion()">
+      Login with question
+    </button>
+  </div>
+  <div *ngIf="question">
+    Login with password ?
+    <button mat-raised-button color="primary" (click)="goToLogin()">
+      Login with password
+    </button>
+  </div>
+  <br />
+  Have not account yet ?
+  <button mat-raised-button color="primary" (click)="goToRegis()">
+    Registration
+  </button>
+</div>
